@@ -1,4 +1,4 @@
-rtificial intelligence in Software Engineering
+Artificial intelligence in Software Engineering
 
  Overview
 This repository documents my hands-on experience integrating AI into software engineering tasks such as debugging, refactoring, and optimization. Each project demonstrates a clear before-and-after transformation.

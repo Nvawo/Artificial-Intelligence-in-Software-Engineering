@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive CSS Box Model Lab</title>
+    <style>
+        * {
+            box-sizing: content-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                Roboto, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 24px;
+            display: flex;
+            gap: 24px;
+        }
+
+        .stage {
+            flex: 1;
+            background: #1e293b;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+
+        .controls {
+            width: 340px;
+            background: #1e293b;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            height: max-content;
+        }
+
+        .box-container {
+            background: #0f172a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px dashed #475569;
+            min-height: 400px;
+        }
+
+        #box1 {
+            background-color: #ef4444;
+            background-image:
+                linear-gradient(#3b82f6, #3b82f6),
+                linear-gradient(#f59e0b, #f59e0b);
+            background-clip: content-box, padding-box, margin-box;
+            border-style: solid;
+            border-color: #10b981;
+            color: #ffffff;
+            font-weight: bold;
+            font-size: 14px;
+            display: block;
+            text-align: center;
+            line-height: 40px;
+            transition: all 0.1s ease;
+        }
+
+        #box2 {
+            background: #64748b;
+            color: white;
+            padding: 15px;
+            margin-top: 10px;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .control-group label {
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        input[type=range],
+        select {
+            width: 100%;
+            padding: 6px;
+            background: #0f172a;
+            border: 1px solid #475569;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .grid-2x2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="stage">
+        <h2 style="margin-bottom: 16px;">
+            Interactive Box Model Stage
+        </h2>
+
+        <div class="box-container">
+            <div id="box1">Box 1 (Controlled)</div>
+            <div id="box2">Box 2 (Sibling Element)</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <h3>Box Model Controls</h3>
+
+        <div class="control-group">
+            <label>Display Property</label>
+
+            <select id="displaySelect">
+                <option value="block">block</option>
+                <option value="inline-block">inline-block</option>
+                <option value="inline">inline</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>
+                Width
+                <span id="val-width">180px</span>
+            </label>
+
+            <input
+                type="range"
+                id="width"
+                min="80"
+                max="300"
+                value="180"
+            >
+        </div>
+
+        <div class="control-group">
+            <label>Padding Top/Right/Bottom/Left</label>
+
+            <div class="grid-2x2">
+                <input
+                    type="range"
+                    id="pad-top"
+                    min="0"
+                    max="50"
+                    value="15"
+                >
+
+                <input
+                    type="range"
+                    id="pad-right"
+                    min="0"
+                    max="50"
+                    value="15"
+                >
+
+                <input
+                    type="range"
+                    id="pad-bottom"
+                    min="0"
+                    max="50"
+                    value="15"
+                >
+
+                <input
+                    type="range"
+                    id="pad-left"
+                    min="0"
+                    max="50"
+                    value="15"
+                >
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>Margin Top/Right/Bottom/Left</label>
+
+            <div class="grid-2x2">
+                <input
+                    type="range"
+                    id="mar-top"
+                    min="0"
+                    max="50"
+                    value="15"
+                >
+
+                <input
+                    type="range"
+                    id="mar-right"
+                    min="0"
+                    max="50"
+                    value="15"
+                >
+
+                <input
+                    type="range"
+                    id="mar-bottom"
+                    min="0"
+                    max="50"
+                    value="15"
+                >
+
+                <input
+                    type="range"
+                    id="mar-left"
+                    min="0"
+                    max="50"
+                    value="15"
+                >
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>
+                Border Width
+                <span id="val-border">4px</span>
+            </label>
+
+            <input
+                type="range"
+                id="borderWidth"
+                min="1"
+                max="20"
+                value="4"
+            >
+        </div>
+
+        <div class="control-group">
+            <label>
+                Border Radius
+                <span id="val-radius">8px</span>
+            </label>
+
+            <input
+                type="range"
+                id="borderRadius"
+                min="0"
+                max="50"
+                value="8"
+            >
+        </div>
+    </div>
+
+    <script>
+        const box1 = document.getElementById('box1');
+        const displaySelect = document.getElementById('displaySelect');
+        const width = document.getElementById('width');
+        const borderWidth = document.getElementById('borderWidth');
+        const borderRadius = document.getElementById('borderRadius');
+
+        function updateCSS() {
+            const pT =
+                document.getElementById('pad-top').value + 'px';
+            const pR =
+                document.getElementById('pad-right').value + 'px';
+            const pB =
+                document.getElementById('pad-bottom').value + 'px';
+            const pL =
+                document.getElementById('pad-left').value + 'px';
+
+            const mT =
+                document.getElementById('mar-top').value + 'px';
+            const mR =
+                document.getElementById('mar-right').value + 'px';
+            const mB =
+                document.getElementById('mar-bottom').value + 'px';
+            const mL =
+                document.getElementById('mar-left').value + 'px';
+
+            box1.style.display = displaySelect.value;
+            box1.style.width = width.value + 'px';
+
+            box1.style.padding =
+                `${pT} ${pR} ${pB} ${pL}`;
+
+            box1.style.margin =
+                `${mT} ${mR} ${mB} ${mL}`;
+
+            box1.style.borderWidth =
+                borderWidth.value + 'px';
+
+            box1.style.borderRadius =
+                borderRadius.value + 'px';
+
+            document.getElementById('val-width').textContent =
+                width.value + 'px';
+
+            document.getElementById('val-border').textContent =
+                borderWidth.value + 'px';
+
+            document.getElementById('val-radius').textContent =
+                borderRadius.value + 'px';
+        }
+
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('input', updateCSS);
+        });
+
+        updateCSS();
+    </script>
+</body>
+</html>

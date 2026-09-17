@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refined CSS Box Model Lab (Side-Specific Controls)</title>
+    <style>
+        * {
+            box-sizing: content-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+                Roboto, Helvetica, Arial, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            padding: 24px;
+            display: flex;
+            gap: 24px;
+            min-height: 100vh;
+        }
+
+        .stage-container {
+            flex: 1;
+            background-color: #1e293b;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .stage-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #f1f5f9;
+        }
+
+        .canvas {
+            background-color: #0f172a;
+            border: 2px dashed #475569;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 500px;
+            position: relative;
+        }
+
+        #box1 {
+            background-color: #ef4444;
+            background-image:
+                linear-gradient(#3b82f6, #3b82f6),
+                linear-gradient(#f59e0b, #f59e0b);
+            background-clip: content-box, padding-box, margin-box;
+            border-style: solid;
+            border-color: #10b981;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-align: center;
+            line-height: 40px;
+            display: block;
+            width: 200px;
+            transition: all 0.05s ease-out;
+        }
+
+        #box2 {
+            background-color: #64748b;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 16px;
+            border-radius: 6px;
+            border: 2px solid #94a3b8;
+        }
+
+        .control-panel {
+            width: 380px;
+            background-color: #1e293b;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            height: max-content;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .panel-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #f1f5f9;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 10px;
+        }
+
+        .section-header {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #38bdf8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 4px;
+        }
+
+        .control-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .grid-2x2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #cbd5e1;
+            font-weight: 500;
+        }
+
+        .value-badge {
+            color: #38bdf8;
+            font-family: monospace;
+            font-weight: 600;
+        }
+
+        input[type="range"] {
+            width: 100%;
+            accent-color: #38bdf8;
+            cursor: pointer;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px 12px;
+            background-color: #0f172a;
+            border: 1px solid #475569;
+            color: #f8fafc;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            outline: none;
+        }
+
+        select:focus {
+            border-color: #38bdf8;
+        }
+
+        .legend {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            font-size: 0.75rem;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #334155;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .color-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="stage-container">
+        <div class="stage-title">
+            Interactive Stage (Refined Box Model)
+        </div>
+
+        <div class="canvas">
+            <div id="box1">Box 1</div>
+            <div id="box2">Box 2</div>
+        </div>
+    </div>
+
+    <div class="control-panel">
+        <div class="panel-title">
+            Side-Specific Box 1 Controls
+        </div>
+
+        <div class="control-item">
+            <div class="label-row">
+                <span>Display Property</span>
+            </div>
+
+            <select id="displaySelect">
+                <option value="block" selected>block</option>
+                <option value="inline-block">inline-block</option>
+                <option value="inline">inline</option>
+            </select>
+        </div>
+
+        <div class="control-item">
+            <div class="label-row">
+                <span>Width</span>
+                <span id="val-width" class="value-badge">200px</span>
+            </div>
+
+            <input
+                type="range"
+                id="widthSlider"
+                min="50"
+                max="350"
+                value="200"
+            >
+        </div>
+
+        <div class="control-item">
+            <div class="label-row">
+                <span>Corner Radius (border-radius)</span>
+                <span id="val-radius" class="value-badge">0px</span>
+            </div>
+
+            <input
+                type="range"
+                id="radiusSlider"
+                min="0"
+                max="50"
+                value="0"
+            >
+        </div>
+
+        <div class="section-header">Padding Controls</div>
+
+        <div class="grid-2x2">
+            <div class="control-item">
+                <div class="label-row">
+                    <span>Top</span>
+                    <span id="val-pad-top" class="value-badge">15px</span>
+                </div>
+
+                <input
+                    type="range"
+                    class="slider-pad"
+                    id="padTop"
+                    min="0"
+                    max="60"
+                    value="15"
+                >
+            </div>
+
+            <div class="control-item">
+                <div class="label-row">
+                    <span>Right</span>
+                    <span id="val-pad-right" class="value-badge">15px</span>
+                </div>
+
+                <input
+                    type="range"
+                    class="slider-pad"
+                    id="padRight"
+                    min="0"
+                    max="60"
+                    value="15"
+                >
+            </div>
+
+            <div class="control-item">
+                <div class="label-row">
+                    <span>Bottom</span>
+                    <span id="val-pad-bottom" class="value-badge">15px</span>
+                </div>
+
+                <input
+                    type="range"
+                    class="slider-pad"
+                    id="padBottom"
+                    min="0"
+                    max="60"
+                    value="15"
+                >
+            </div>
+
+            <div class="control-item">
+                <div class="label-row">
+                    <span>Left</span>
+                    <span id="val-pad-left" class="value-badge">15px</span>
+                </div>
+
+                <input
+                    type="range"
+                    class="slider-pad"
+                    id="padLeft"
+                    min="0"
+                    max="60"
+                    value="15"
+                >
+            </div>
+        </div>
+
+        <div class="section-header">Margin Controls</div>
+
+        <div class="grid-2x2">
+            <div class="control-item">
+                <div class="label-row">
+                    <span>Top</span>
+                    <span id="val-mar-top" class="value-badge">15px</span>
+                </div>
+
+                <input
+                    type="range"
+                    class="slider-mar"
+                    id="marTop"
+                    min="0"
+                    max="60"
+                    value="15"
+                >
+            </div>
+
+            <div class="control-item">
+                <div class="label-row">
+                    <span>Right</span>
+                    <span id="val-mar-right" class="value-badge">15px</span>
+                </div>
+
+                <input
+                    type="range"
+                    class="slider-mar"
+                    id="marRight"
+                    min="0"
+                    max="60"
+                    value="15"
+                >
+            </div>
+
+            <div class="control-item">
+                <div class="label-row">
+                    <span>Bottom</span>
+                    <span id="val-mar-bottom" class="value-badge">15px</span>
+                </div>
+
+                <input
+                    type="range"
+                    class="slider-mar"
+                    id="marBottom"
+                    min="0"
+                    max="60"
+                    value="15"
+                >
+            </div>
+
+            <div class="control-item">
+                <div class="label-row">
+                    <span>Left</span>
+                    <span id="val-mar-left" class="value-badge">15px</span>
+                </div>
+
+                <input
+                    type="range"
+                    class="slider-mar"
+                    id="marLeft"
+                    min="0"
+                    max="60"
+                    value="15"
+                >
+            </div>
+        </div>
+
+        <div class="section-header">Border Width Controls</div>
+
+        <div class="grid-2x2">
+            <div class="control-item">
+                <div class="label-row">
+                    <span>Top</span>
+                    <span id="val-bor-top" class="value-badge">4px</span>
+                </div>
+
+                <input
+                    type="range"
+                    class="slider-bor"
+                    id="borTop"
+                    min="0"
+                    max="20"
+                    value="4"
+                >
+            </div>
+
+            <div class="control-item">
+                <div class="label-row">
+                    <span>Right</span>
+                    <span id="val-bor-right" class="value-badge">4px</span>
+                </div>
+
+                <input
+                    type="range"
+                    class="slider-bor"
+                    id="borRight"
+                    min="0"
+                    max="20"
+                    value="4"
+                >
+            </div>
+
+            <div class="control-item">
+                <div class="label-row">
+                    <span>Bottom</span>
+                    <span id="val-bor-bottom" class="value-badge">4px</span>
+                </div>
+
+                <input
+                    type="range"
+                    class="slider-bor"
+                    id="borBottom"
+                    min="0"
+                    max="20"
+                    value="4"
+                >
+            </div>
+
+            <div class="control-item">
+                <div class="label-row">
+                    <span>Left</span>
+                    <span id="val-bor-left" class="value-badge">4px</span>
+                </div>
+
+                <input
+                    type="range"
+                    class="slider-bor"
+                    id="borLeft"
+                    min="0"
+                    max="20"
+                    value="4"
+                >
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div
+                    class="color-dot"
+                    style="background:#ef4444;"
+                ></div>
+                Content
+            </div>
+
+            <div class="legend-item">
+                <div
+                    class="color-dot"
+                    style="background:#3b82f6;"
+                ></div>
+                Padding
+            </div>
+
+            <div class="legend-item">
+                <div
+                    class="color-dot"
+                    style="background:#f59e0b;"
+                ></div>
+                Margin
+            </div>
+
+            <div class="legend-item">
+                <div
+                    class="color-dot"
+                    style="background:#10b981;"
+                ></div>
+                Border
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const box1 = document.getElementById('box1');
+        const displaySelect =
+            document.getElementById('displaySelect');
+        const widthSlider =
+            document.getElementById('widthSlider');
+        const radiusSlider =
+            document.getElementById('radiusSlider');
+
+        const padTop = document.getElementById('padTop');
+        const padRight = document.getElementById('padRight');
+        const padBottom = document.getElementById('padBottom');
+        const padLeft = document.getElementById('padLeft');
+
+        const marTop = document.getElementById('marTop');
+        const marRight = document.getElementById('marRight');
+        const marBottom = document.getElementById('marBottom');
+        const marLeft = document.getElementById('marLeft');
+
+        const borTop = document.getElementById('borTop');
+        const borRight = document.getElementById('borRight');
+        const borBottom = document.getElementById('borBottom');
+        const borLeft = document.getElementById('borLeft');
+
+        function updateRefinedBoxModel() {
+            box1.style.display = displaySelect.value;
+
+            box1.style.width =
+                widthSlider.value + 'px';
+
+            box1.style.borderRadius =
+                radiusSlider.value + 'px';
+
+            box1.style.paddingTop =
+                padTop.value + 'px';
+
+            box1.style.paddingRight =
+                padRight.value + 'px';
+
+            box1.style.paddingBottom =
+                padBottom.value + 'px';
+
+            box1.style.paddingLeft =
+                padLeft.value + 'px';
+
+            box1.style.marginTop =
+                marTop.value + 'px';
+
+            box1.style.marginRight =
+                marRight.value + 'px';
+
+            box1.style.marginBottom =
+                marBottom.value + 'px';
+
+            box1.style.marginLeft =
+                marLeft.value + 'px';
+
+            box1.style.borderTopWidth =
+                borTop.value + 'px';
+
+            box1.style.borderRightWidth =
+                borRight.value + 'px';
+
+            box1.style.borderBottomWidth =
+                borBottom.value + 'px';
+
+            box1.style.borderLeftWidth =
+                borLeft.value + 'px';
+
+            document.getElementById('val-width').textContent =
+                widthSlider.value + 'px';
+
+            document.getElementById('val-radius').textContent =
+                radiusSlider.value + 'px';
+
+            document.getElementById('val-pad-top').textContent =
+                padTop.value + 'px';
+
+            document.getElementById('val-pad-right').textContent =
+                padRight.value + 'px';
+
+            document.getElementById('val-pad-bottom').textContent =
+                padBottom.value + 'px';
+
+            document.getElementById('val-pad-left').textContent =
+                padLeft.value + 'px';
+
+            document.getElementById('val-mar-top').textContent =
+                marTop.value + 'px';
+
+            document.getElementById('val-mar-right').textContent =
+                marRight.value + 'px';
+
+            document.getElementById('val-mar-bottom').textContent =
+                marBottom.value + 'px';
+
+            document.getElementById('val-mar-left').textContent =
+                marLeft.value + 'px';
+
+            document.getElementById('val-bor-top').textContent =
+                borTop.value + 'px';
+
+            document.getElementById('val-bor-right').textContent =
+                borRight.value + 'px';
+
+            document.getElementById('val-bor-bottom').textContent =
+                borBottom.value + 'px';
+
+            document.getElementById('val-bor-left').textContent =
+                borLeft.value + 'px';
+        }
+
+        document
+            .querySelectorAll('input, select')
+            .forEach(element => {
+                element.addEventListener(
+                    'input',
+                    updateRefinedBoxModel
+                );
+            });
+
+        updateRefinedBoxModel();
+    </script>
+</body>
+</html>

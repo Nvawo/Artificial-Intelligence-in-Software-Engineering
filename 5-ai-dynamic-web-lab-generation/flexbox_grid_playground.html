@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flexbox & Grid Layout Playground</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+                Roboto, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 24px;
+            display: flex;
+            gap: 24px;
+        }
+
+        .stage {
+            flex: 1;
+            background: #1e293b;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+        }
+
+        .controls {
+            width: 320px;
+            background: #1e293b;
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .container {
+            background: #0f172a;
+            border: 2px dashed #3b82f6;
+            padding: 16px;
+            min-height: 400px;
+            border-radius: 8px;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .item {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            border-radius: 6px;
+            font-size: 18px;
+            min-width: 60px;
+            min-height: 60px;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 12px;
+            color: #94a3b8;
+            font-weight: 600;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            background: #0f172a;
+            border: 1px solid #475569;
+            color: white;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="stage">
+        <h2 style="margin-bottom: 16px;">
+            Layout Visualizer
+        </h2>
+
+        <div id="layoutContainer" class="container">
+            <div class="item">Item 1</div>
+            <div class="item">Item 2</div>
+            <div class="item">Item 3</div>
+            <div class="item">Item 4</div>
+            <div class="item">Item 5</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <h3>Container Properties</h3>
+
+        <div class="control-group">
+            <label>display</label>
+
+            <select id="display">
+                <option value="flex">flex</option>
+                <option value="grid">grid</option>
+                <option value="block">block</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>flex-direction (Flex only)</label>
+
+            <select id="flexDirection">
+                <option value="row">row</option>
+                <option value="column">column</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>justify-content</label>
+
+            <select id="justifyContent">
+                <option value="flex-start">
+                    flex-start / start
+                </option>
+                <option value="center">center</option>
+                <option value="flex-end">
+                    flex-end / end
+                </option>
+                <option value="space-between">
+                    space-between
+                </option>
+                <option value="space-around">
+                    space-around
+                </option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>align-items</label>
+
+            <select id="alignItems">
+                <option value="stretch">stretch</option>
+                <option value="flex-start">
+                    flex-start / start
+                </option>
+                <option value="center">center</option>
+                <option value="flex-end">
+                    flex-end / end
+                </option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label>grid-template-columns (Grid only)</label>
+
+            <select id="gridTemplateColumns">
+                <option value="1fr 1fr">
+                    1fr 1fr
+                </option>
+                <option value="1fr 1fr 1fr">
+                    1fr 1fr 1fr
+                </option>
+                <option value="100px 1fr 2fr">
+                    100px 1fr 2fr
+                </option>
+            </select>
+        </div>
+    </div>
+
+    <script>
+        const container =
+            document.getElementById('layoutContainer');
+
+        const display =
+            document.getElementById('display');
+
+        const flexDirection =
+            document.getElementById('flexDirection');
+
+        const justifyContent =
+            document.getElementById('justifyContent');
+
+        const alignItems =
+            document.getElementById('alignItems');
+
+        const gridTemplateColumns =
+            document.getElementById('gridTemplateColumns');
+
+        function updateLayout() {
+            container.style.display = display.value;
+
+            container.style.flexDirection =
+                flexDirection.value;
+
+            container.style.justifyContent =
+                justifyContent.value;
+
+            container.style.alignItems =
+                alignItems.value;
+
+            if (display.value === 'grid') {
+                container.style.gridTemplateColumns =
+                    gridTemplateColumns.value;
+            } else {
+                container.style.gridTemplateColumns = 'none';
+            }
+        }
+
+        document
+            .querySelectorAll('select')
+            .forEach(select => {
+                select.addEventListener(
+                    'change',
+                    updateLayout
+                );
+            });
+
+        updateLayout();
+    </script>
+</body>
+</html>
